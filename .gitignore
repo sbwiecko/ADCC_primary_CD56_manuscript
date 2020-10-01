@@ -1,0 +1,12 @@
+# we don't need to share all the figures and regression reports
+figures/
+reports/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+*env/
+
+# VS Code settings
+.vscode/
