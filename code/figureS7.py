@@ -93,66 +93,66 @@ f.close
 
 fig = plt.figure(figsize = (8,7))
 
-### Subplot A - before/after min-max ADCC using CD56+ cells
-plt.subplot(211)
+# ### Subplot A - before/after min-max ADCC using CD56+ cells
+# plt.subplot(211)
 
-# for this before/after graph, we plot bottom-top doublets for each donor
-for x in range(30):
-    plt.plot([0,1], [bottom[x], top[x]],
-             label=data_cd56.iloc[x]['donor'],
-             lw=3,
-             alpha=.5,
-             color=colors_[x],
-             marker='^',
-             markeredgecolor='black',
-             markerfacecolor='k',
-             markersize=8)
+# # for this before/after graph, we plot bottom-top doublets for each donor
+# for x in range(30):
+#     plt.plot([0,1], [bottom[x], top[x]],
+#              label=data_cd56.iloc[x]['donor'],
+#              lw=3,
+#              alpha=.5,
+#              color=colors_[x],
+#              marker='^',
+#              markeredgecolor='black',
+#              markerfacecolor='k',
+#              markersize=8)
 
-plt.ylabel(r"% specific release",
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.ylim((-10,100))
-plt.yticks(size=6)
-plt.xticks([0,1], ['minimun', 'maximum'],
-           size=9,
-           fontweight= 'bold')
+# plt.ylabel(r"% specific release",
+#            fontdict={'size': 8, 'weight': 'bold'})
+# plt.ylim((-10,100))
+# plt.yticks(size=6)
+# plt.xticks([0,1], ['minimun', 'maximum'],
+#            size=9,
+#            fontweight= 'bold')
 
-plt.legend(loc='upper left',
-           fontsize=7,
-           ncol=3,
-           title='donor',
-           title_fontsize=9)
-
-
-### Subplot B - KDE histograms with ADCC data using CD56+ cells
-plt.subplot(223)
-
-sns.kdeplot(data_cd56['EC50'],
-            bw=.4,
-            shade=True,
-            color='indigo',
-            linewidth=2,
-            legend=False)
-
-sns.rugplot(data_cd56['EC50'],
-            color='indigo',)
-
-plt.ylabel("density",
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.yticks(size=6)
-plt.xlabel(r"log$_{10}$EC$_{50}$ (µg/mL)",
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.axvline(x=data_cd56['EC50'].mean(),    # equals -3.0042
-            ls='--',
-            linewidth=2,
-            color='red')
-plt.xlim((-5, 0))
-plt.xticks(size=6)
-plt.title(r'isolated CD56$^+$ cells',
-          fontdict=dict(size=10, weight='bold'))
+# plt.legend(loc='upper left',
+#            fontsize=7,
+#            ncol=3,
+#            title='donor',
+#            title_fontsize=9)
 
 
-### Subplot C - KDE histograms with ADCC data using PBMCs
-ax3 = plt.subplot(224)
+# ### Subplot B - KDE histograms with ADCC data using CD56+ cells
+# plt.subplot(223)
+
+# sns.kdeplot(data_cd56['EC50'],
+#             bw=.4,
+#             shade=True,
+#             color='indigo',
+#             linewidth=2,
+#             legend=False)
+
+# sns.rugplot(data_cd56['EC50'],
+#             color='indigo',)
+
+# plt.ylabel("density",
+#            fontdict={'size': 8, 'weight': 'bold'})
+# plt.yticks(size=6)
+# plt.xlabel(r"log$_{10}$EC$_{50}$ (µg/mL)",
+#            fontdict={'size': 8, 'weight': 'bold'})
+# plt.axvline(x=data_cd56['EC50'].mean(),    # equals -3.0042
+#             ls='--',
+#             linewidth=2,
+#             color='red')
+# plt.xlim((-5, 0))
+# plt.xticks(size=6)
+# plt.title(r'isolated CD56$^+$ cells',
+#           fontdict=dict(size=10, weight='bold'))
+
+
+# ### Subplot C - KDE histograms with ADCC data using PBMCs
+ax3 = plt.subplot()
 
 # we loop over the 4 different E:T ratio and plot the corresponding histogram
 for ratio in data_pbmc['E:T'].unique():
@@ -160,7 +160,7 @@ for ratio in data_pbmc['E:T'].unique():
                 bw=.4,
                 shade=False,
                 color=colors_hist[ratio],
-                linewidth=3,
+                linewidth=4,
                 legend=False,
                 ax=ax3)
 
@@ -168,18 +168,18 @@ for ratio in data_pbmc['E:T'].unique():
                 color=colors_hist[ratio])
 
 plt.ylabel("density",
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.yticks(size=6)
+           fontdict={'size': 16, 'weight': 'bold'})
+plt.yticks(size=12)
 plt.xlabel(r"log$_{10}$EC$_{50}$ (µg/mL)",
-           fontdict={'size': 8, 'weight': 'bold'})
+           fontdict={'size': 16, 'weight': 'bold'})
 plt.axvline(x=data_cd56['EC50'].mean(),
             ls='--',
-            linewidth=2,
+            linewidth=3,
             color='red')
 plt.xlim((-5, 0))
-plt.xticks(size=6)
-plt.title('whole PBMCs',
-          fontdict=dict(size=10, weight='bold'))
+plt.xticks(size=12)
+# plt.title('whole PBMCs',
+#           fontdict=dict(size=10, weight='bold'))
 
 
 # remake the legend to include the results of the paired t-tests
@@ -190,17 +190,17 @@ leg = ['30:1 (**)',
 
 plt.legend(leg,
            loc='upper left',
-           fontsize=7,
+           fontsize=10,
            title='E:T ratio',
-           title_fontsize=9)
+           title_fontsize=12)
 
 
 # a few additional aesthetic
 plt.tight_layout()
 
-fig.text(0.01, 0.97, "A", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.01, 0.49, "B", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.50, 0.49, "C", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.01, 0.97, "A", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.01, 0.49, "B", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.50, 0.49, "C", weight="bold", size=16, horizontalalignment='left')
 
 
 plt.savefig('../figures/figureS7.svg') # save as .svg via Visual Code Plots Explorer

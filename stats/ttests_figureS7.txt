@@ -10,10 +10,10 @@ statistic=-7.097651, pvalue=0.0
 --------------------------------------------------------------------------------
 Paired t-tests between 19 EC50 values using isolated CD56+ cells and 19 values using PBMCs from the corresponding donors
 E:T=30:1¬
-statistic=3.360929, pvalue=0.00348
+statistic=-3.360929, pvalue=0.00348
 E:T=15:1¬
-statistic=3.924169, pvalue=0.000994
+statistic=-3.924169, pvalue=0.000994
 E:T=6:1¬
-statistic=4.320756, pvalue=0.000412
+statistic=-4.320756, pvalue=0.000412
 E:T=3:1¬
-statistic=7.20873, pvalue=1e-06
+statistic=-7.20873, pvalue=1e-06

@@ -197,7 +197,7 @@ def stars(ax, x1, x2, y, pval=1, t=0, h=0):
 ### FIGURES ###
 
 fig = plt.figure(figsize=(6.5, 9.5)) # modified A4 format in inches
-gs = fig.add_gridspec(nrows=11, ncols=2,)
+gs = fig.add_gridspec(nrows=13, ncols=2,)
 
 ### subplot A
 ax1 = fig.add_subplot(gs[0:3, 0])
@@ -350,7 +350,7 @@ slope1, intercept1, r_value1, p_value1, std_err1 = stats.linregress(
             data['CD56HI,CD16-|NK'], data['LOG10(EC50;6:1)'])
 
 # plot with ρ indicated
-ax4 = fig.add_subplot(gs[-2:, 0])
+ax4 = fig.add_subplot(gs[10:, 0])
 sns.regplot(x='CD56HI,CD16-|NK', y='LOG10(EC50;6:1)', data=data,
             scatter_kws={"color": "black", 's': 22},
             line_kws={'label': f"ρ={r_value1:.2f}"},
@@ -372,7 +372,7 @@ slope2, intercept2, r_value2, p_value2, std_err2 = stats.linregress(
             data['CD56TOTAL'], data['MAX_%_ADCC(30:1)'])
 
 # plot with ρ indicated
-ax5 = fig.add_subplot(gs[-2:, 1])
+ax5 = fig.add_subplot(gs[10:, 1])
 sns.regplot(x='CD56TOTAL', y='MAX_%_ADCC(30:1)', data=data,
             scatter_kws={"color": "black", 's': 22},
             line_kws={'label': f"ρ={r_value2:.2f}"},
@@ -399,14 +399,14 @@ with open("../stats/pval_figure2.txt", 'w') as f:
 
 plt.tight_layout()
 
-# a few additional aesthetic
-fig.text(0.054, 0.975, "A", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.525, 0.975, "B", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.050, 0.715, "C", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.057, 0.147, "D", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.522, 0.147, "E", weight="bold", size=16, horizontalalignment='left')
+# # a few additional aesthetic
+# fig.text(0.054, 0.975, "A", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.525, 0.975, "B", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.050, 0.715, "C", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.057, 0.147, "D", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.522, 0.147, "E", weight="bold", size=16, horizontalalignment='left')
 
 
-plt.savefig('../figures/figure2.pdf') 
+plt.savefig('../figures/figure2.svg') 
 
 #####

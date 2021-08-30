@@ -129,15 +129,15 @@ ax4.legend(wedges, data_pie.index,
 plt.setp(texts, size=10, weight="bold")
 
 # a few additional aesthetic
-fig.text(0.010, 0.95, "A", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.497, 0.95, "B", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.010, 0.47, "C", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.500, 0.47, "D", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.010, 0.95, "A", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.497, 0.95, "B", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.010, 0.47, "C", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.500, 0.47, "D", weight="bold", size=16, horizontalalignment='left')
 
 plt.tight_layout()
 
-#plt.savefig('../figures/figureS3.svg')
-plt.savefig('../figures/figureS3.pdf')
+plt.savefig('../figures/figureS3.svg')
+#plt.savefig('../figures/figureS3.pdf')
 
 
 #####

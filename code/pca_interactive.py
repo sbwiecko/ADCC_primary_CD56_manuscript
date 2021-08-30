@@ -17,7 +17,7 @@ from functools import reduce # for merging multiple dataframes
 
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+import plotly.express as px
 from scipy import stats
 from pingouin import anova, pairwise_tukey
 
@@ -134,11 +134,11 @@ feat = ['nkp30+|cd56', 'nkp44+|cd56', 'nkp46+|cd56',
         'kir2dl1+|cd56', 'kir2dl2+|cd56', 'kir3dl1+|cd56',]
 X = data_cd56[feat]
 
-pca = PCA(n_components=2)
+pca = PCA(n_components=3)
 comp = pca.fit_transform(X)
 
 pca_data = pd.DataFrame(data=comp,
-                        columns=['PC1', 'PC2'],
+                        columns=['PC1', 'PC2', 'PC3'],
                         index=X.index)
 pca_data.index = data_cd56.index
 pca_data = pd.merge(pca_data, data, left_index=True, right_index=True) # merge on both indices
@@ -216,229 +216,50 @@ def wrap_rcparams(f, params):
 
 #%%
 ### FIGURE ###
-fig = plt.figure(figsize = (8,9), constrained_layout=True)
-gs = fig.add_gridspec(nrows=8, ncols=11)
-
-# SUBPLOT A - NK, NKT and TCRgd among total PBMCs
-ax1 = fig.add_subplot(gs[:2, :3])
-sns.stripplot(data=data_nktcr,
-              size=4,
-              palette='Set2',
-              ax=ax1) # seaborn consideres data are in the wide format
-
-sns.boxplot(data=data_nktcr,
-            color='white',
-            fliersize=0, # there is a stripplot anyway
-            ax=ax1)
-
-# loop over each box of the axis and attribute black color
-for i,artist in enumerate(ax1.artists):
-    artist.set_edgecolor('black')
-
-# loop over each line of the axis and attribute balck color
-for line__ in ax1.lines:
-    line__.set_color('black')
-
-plt.ylabel(r'% of total PBMCs',
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.ylim((0,35))
-plt.yticks(fontsize=6)
-plt.xticks([0,1,2],
-           ['NK',
-            r'CD56$^{+}$'+'\n'+r'lineage$^+$',
-            'TCRγδ'],
-           rotation=0,
-           size=8)
+fig = px.scatter_3d(
+    pca_data.reset_index(),
+    x='PC1', y='PC2', z='PC3',
+    size='max % ADCC',
+    color='FCGR3A',
+    #text='donor',
+    hover_data={
+        'donor' : True,
+        'FCGR3A': True,
+        'max % ADCC': ':.1f',
+        'PC1': False,
+        'PC2': False,
+        'PC3': False,
+    },
+    opacity=.85,
+    size_max=30,
+    )
 
 
-# SUBPLOT B - frequency of NK, NKT and TCRgd among total PBMCs
-ax2 = fig.add_subplot(gs[:2, 3:7])
-data_cd56_bars.plot.bar(colormap='Set3',
-                        stacked=True,
-                        width=1,
-                        ax=ax2)
+# fig.update_layout(legend=dict(
+#     yanchor="top",
+#     y=0.90,
+#     xanchor="left",
+#     x=0.10,
+#     font=dict(size=8)
+# ))
+fig.update_layout(
+    showlegend=False,
+    autosize=False,
+    width=530,
+    height=470,
+    margin=dict(
+        l=5,
+        r=5,
+        b=5,
+        t=5,
+        pad=1,
+    )
+)
+# fig.update_xaxes(automargin=True)
+# fig.update_yaxes(automargin=True)
 
-plt.xticks(rotation=60,
-           fontsize=5)
-plt.xlabel('donor',
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.yticks(fontsize=6)
-plt.ylabel(r'% of total PBMCs',
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.legend(labels=['NK', r'CD56$^+$lin$^+$TCRγδ$^-$', r'CD56$^+$TCRγδ'], # inappropriate naming of NKT (reviewer#1)
-           fontsize=6,
-           title=None,
-           loc='upper left',
-           )
-
-
-# SUBPLOT C - frequency of CD16hi, CD16int and CD16- in total CD56
-ax3 = fig.add_subplot(gs[:2, 7:])
-data_cd16_bars.plot.bar(colormap=cmap,
-                        stacked=True,
-                        width=1,
-                        ax=ax3)
-
-plt.xticks(rotation=60,
-           fontsize=5)
-plt.xlabel('donor',
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.yticks(fontsize=6)
-plt.ylabel(r'% of total CD56',
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.legend(labels=[r'CD16$^{hi}$', r'CD16$^{int}$', r'CD16$^-$'],
-           fontsize=6,
-           title=None)
-
-
-### SUBPLOT D - frequency of markers+ cells in CD56+
-ax7 = fig.add_subplot(gs[2:4, :])
-sns.stripplot(data=data_cd56_box,
-              size=4,
-              ax=ax7) # seaborn consideres data are in the wide format
-
-sns.boxplot(data=data_cd56_box,
-            color='white',
-            fliersize=0, # there is a stripplot anyway
-            ax=ax7)
-
-# loop over each box of the axis and attribute black color
-for i,artist in enumerate(ax7.artists):
-    artist.set_edgecolor('black')
-
-# loop over each line of the axis and attribute balck color
-for line_ in ax7.lines:
-    line = line_
-    line.set_color('black')
-
-plt.ylabel(r'% of total CD56$^+$ cells',
-           fontdict={'size': 8, 'weight': 'bold'})
-plt.ylim((0,100))
-plt.yticks(size=6)
-plt.xticks(rotation=90,
-           size=7)
-
-
-# ### SUBPLOT E - MAX % ADCC IN TOTAL CD56
-# ax4 = fig.add_subplot(gs[5:, 0:3])
-# boxen = sns.boxenplot(x='FCGR3A', y='top', data=data_adcc,
-#                       color='mediumorchid',
-#                       ax=ax4,
-#                       showfliers=False, # new seaborn option since v0.10.1
-#                       )
-
-# for line in boxen.lines:
-#     line.set_linewidth(2) # increase the width of the median line
-#     line.set_color('white')
-#     line.set_alpha(1)
-
-# sns.stripplot(x='FCGR3A', y='top', data=data_adcc,
-#               color='black',
-#               size=5,
-#               alpha=.8,
-#               dodge=True,
-#               ax=ax4)
-
-# plt.ylabel(r"maximum % ADCC",
-#            fontdict={'size': 8, 'weight': 'bold'})
-# plt.ylim((0,125)) # gives some space for the stars
-# plt.yticks([0,20,40,60,80,100],
-#            size=6)
-# plt.xlabel('FCGR3A haplotype',
-#            fontdict={'size': 8, 'weight': 'bold'})
-# plt.xticks(rotation=0,
-#            size=8)
-
-# # adding the stars
-# stars(ax4, 0, 1, 99, t=-1,
-#  pval=ANOVA_top_posthoc.query("A == 'F/F' & B == 'F/V'")['p-tukey'].values[0])
-# stars(ax4, 1, 2, 106, t=-1,
-#  pval=ANOVA_top_posthoc.query("A == 'F/V' & B == 'V/V'")['p-tukey'].values[0])
-# stars(ax4, 0, 2, 116, t=-1,
-#  pval=ANOVA_top_posthoc.query("A == 'F/F' & B == 'V/V'")['p-tukey'].values[0])
-
-
-# ## SUBPLOT F - EC50 ADCC IN TOTAL CD56
-# ax5 = fig.add_subplot(gs[5:, 3:6])
-# boxen = sns.boxenplot(x='FCGR3A', y='EC50', data=data_adcc,
-#                       color='crimson',
-#                       ax=ax5,
-#                       showfliers=False, # new seaborn option since v0.10.1
-#                       )
-
-# for line in boxen.lines:
-#     line.set_linewidth(2) # increase the width of the median line
-#     #line.set_linestyle(':')
-#     line.set_color('white')
-#     line.set_alpha(1)
-
-# sns.stripplot(x='FCGR3A', y='EC50', data=data_adcc,
-#               color='black',
-#               size=5,
-#               alpha=.8,
-#               dodge=True,
-#               ax=ax5)
-
-# plt.ylabel(r"log$_{10}$EC$_{50}$ (µg/mL)",
-#            fontdict={'size': 8, 'weight': 'bold'})
-# plt.ylim((-3.6,-1.2))
-# plt.yticks(size=6)
-# plt.xlabel('FCGR3A haplotype',
-#            fontdict={'size': 8, 'weight': 'bold'})
-# plt.xticks(rotation=0,
-#            size=8)
-
-# # adding the stars
-# stars(ax5, 0, 1, -2.0, t=-.03,
-#  pval=ANOVA_ec50_posthoc.query("A == 'F/F' & B == 'F/V'")['p-tukey'].values[0])
-# stars(ax5, 1, 2, -2.2, t=-.03,
-#  pval=ANOVA_ec50_posthoc.query("A == 'F/V' & B == 'V/V'")['p-tukey'].values[0])
-# stars(ax5, 0, 2, -1.75, t=-.03,
-#  pval=ANOVA_ec50_posthoc.query("A == 'F/F' & B == 'V/V'")['p-tukey'].values[0])
-
-
-# ### SUBPLOT G - PCA NCR/KIR/KLR features on total CD56
-# ax6 = fig.add_subplot(gs[5:, 6:])
-# sns.scatterplot(pca_data.loc[:, 'PC1'], pca_data.loc[:, 'PC2'],
-#                 alpha=.7,
-#                 size=pca_data['max % ADCC'],
-#                 sizes=(12, 170),
-#                 hue=pca_data['FCGR3A'],
-#                 ax=ax6)
-
-# for donor in pca_data.index:
-#     plt.annotate(donor, (pca_data.loc[donor, 'PC1'],
-#                          pca_data.loc[donor, 'PC2']),
-#                  fontsize=6)
-
-# plt.xlabel(f"Principal Component 1 ({100*pca.explained_variance_ratio_[0]:.1f}%)",
-#            fontdict={'size': 8, 'weight': 'bold'})
-# plt.ylabel(f"Principal Component 2 ({100*pca.explained_variance_ratio_[1]:.1f}%)",
-#            fontdict={'size': 8, 'weight': 'bold'})
-# plt.xticks(size=6)
-# plt.yticks(size=6)
-
-# plt.legend(loc='upper right',
-#            fontsize=6,
-#            title=None)
-
-
-
-# # a few additional aesthetic
-# ax5.draw = wrap_rcparams(ax5.draw, {"mathtext.default":'bf'})
-# ax7.draw = wrap_rcparams(ax7.draw, {"mathtext.default":'bf'})
-
-
-# fig.text(0, .98, "A", weight="bold", size=16, horizontalalignment='left')
-# fig.text(0.232, .98, "B", weight="bold", size=16, horizontalalignment='left')
-# fig.text(0.613, .98, "C", weight="bold", size=16, horizontalalignment='left')
-# fig.text(0, 0.745, "D", weight="bold", size=16, horizontalalignment='left')
-# fig.text(0, 0.335, "E", weight="bold", size=16, horizontalalignment='left')
-# fig.text(0.227, 0.335, "F", weight="bold", size=16, horizontalalignment='left')
-# fig.text(0.453, 0.335, "G", weight="bold", size=16, horizontalalignment='left')
-
-
-plt.savefig('../figures/figure3.svg')
+fig.write_html("pca.html")
 
 
 #####
+# %%

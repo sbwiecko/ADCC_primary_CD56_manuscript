@@ -59,7 +59,7 @@ mapper.update({feat: feat[:-3].upper() for feat in list_markers_nk if feat.endsw
 mapper.update({'nk_cd16b+': 'CD16b+',
                'nkp30+|nk': 'NKp30+', 'nkp44+|nk': 'NKp44+', 'nkp46+|nk': 'NKp46+',
                'nk_fcrl3+': 'FcRL3+', 'nk_fcrl5+': 'FcRL5+', 'nk_fcrl6+': 'FcRL6+',
-               'kir2dl1+|nk': 'KIR2DL1/S1/3/5+', 'kir2dl2+|nk': 'KIR2DL2/3/S2+',
+               'kir2dl1+|nk': 'KIR2DL1+', 'kir2dl2+|nk': 'KIR2DL2+',
                'pd1+|nk': 'PD-1+'})
 
 data_markers_nk = data_markers_nk.rename(columns=mapper)
@@ -68,10 +68,10 @@ data_markers_nk = data_markers_nk.rename(columns=mapper)
 #%%
 ### Building of the 3 parts of Figure 1 ###
 
-fig = plt.figure(figsize=(4, 8)) # this is A4 format in inches
+fig = plt.figure(figsize=(13, 4)) # this is A4 format in inches
 
 ### subplot A
-ax1 = plt.subplot(311)
+ax1 = plt.subplot(131)
 # matplotlib barplot has no 'stacked' option so we used pandas plot capabilities
 data_immune.plot(kind='bar', 
                  colormap='tab10_r',
@@ -96,7 +96,7 @@ plt.legend(labels=[name[:-5] for name in list_immune],
 
 
 ### subplot B
-ax2 = plt.subplot(312)
+ax2 = plt.subplot(132)
 data_nk_subsets.plot(kind='bar',
                      stacked=True,
                      width=.8,
@@ -117,8 +117,8 @@ plt.legend(labels=[r'CD56$^{\mathrm{lo}}$CD16$^{\mathrm{-}}$',
                    fontsize=6)
 
 
-### subplot C
-ax3 = plt.subplot(313)
+## subplot C
+ax3 = plt.subplot(133)
 sns.stripplot(data=data_markers_nk,
               size=4,
               ax=ax3) # seaborn consideres data are in the wide format here
@@ -146,13 +146,13 @@ plt.xticks(rotation=90,
 
 
 # a few additional aesthetics
-fig.text(0.02, 0.978, "A", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.02, 0.667, "B", weight="bold", size=16, horizontalalignment='left')
-fig.text(0.02, 0.359, "C", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.02, 0.978, "A", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.02, 0.667, "B", weight="bold", size=16, horizontalalignment='left')
+# fig.text(0.02, 0.359, "C", weight="bold", size=16, horizontalalignment='left')
 
 plt.tight_layout()
 
-plt.savefig('../figures/figure1.pdf')
+plt.savefig('../figures/figure1.svg')
 
 
 ######
