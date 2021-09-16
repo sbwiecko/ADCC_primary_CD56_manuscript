@@ -141,7 +141,7 @@ def stars(ax, x1, x2, y, pval=1, t=0, h=0):
         ha='center',
         va='bottom',
         color='red',
-        fontdict={'size': 10}
+        fontdict={'size': 11}
     )
 
 
@@ -187,7 +187,7 @@ sns.stripplot(
     order=['TRA', 'G0', 'G2', 'ST3', 'ST6', 'deglyc'],
     color='black',
     size=7,
-    alpha=.6,
+    alpha=.7,
     dodge=True,
     ax=ax1,
 )
@@ -202,7 +202,7 @@ plt.xlabel(
     'trastuzumab variant',
     fontdict={'size': 10, 'weight': 'bold'}
 )
-plt.xticks(rotation=0, size=9)
+plt.xticks(rotation=0, size=10)
 
 plt.title("Upper asymptote (4PL regression)", fontweight="bold")
 
@@ -244,7 +244,7 @@ sns.stripplot(
     order=['TRA', 'G0', 'G2', 'ST3', 'ST6', 'deglyc'],
     color='black',
     size=7,
-    alpha=.6,
+    alpha=.7,
     dodge=True,
     ax=ax2,
 )
@@ -260,7 +260,7 @@ plt.xlabel(
     'trastuzumab variant',
     fontdict={'size': 10, 'weight': 'bold'}
 )
-plt.xticks(rotation=0, size=9)
+plt.xticks(rotation=0, size=10)
 
 plt.title("Mid-range concentration (4PL regression)", fontweight="bold")
 

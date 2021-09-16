@@ -64,7 +64,7 @@ allotype = pd.read_csv(
 
 # we keep the FCGR, FcRL, NCR, KIR and KLR markers for NK cells
 list_markers_nk = [
-    'nk_cd16b+', 'nk_cd32+', 'nk_cd64+',
+    'nk_cd56int|cd16hi', 'nk_cd16b+', 'nk_cd32+', 'nk_cd64+',
     'nk_fcrl3+', 'nk_fcrl5+', 'nk_fcrl6+',
     'nkp30+|nk', 'nkp44+|nk', 'nkp46+|nk',
     'nkg2a+|nk', 'nkg2c+|nk', 'nkg2d+|nk',
@@ -79,6 +79,7 @@ mapper = {feat: feat[3:].upper() for feat in list_markers_nk if feat.startswith(
 mapper.update({feat: feat[:-3].upper() for feat in list_markers_nk if feat.endswith('|nk')})
 mapper.update(
     {
+        'nk_cd56int|cd16hi': 'CD16+',
         'nk_cd16b+': 'CD16b+',
         'nkp30+|nk': 'NKp30+', 'nkp44+|nk': 'NKp44+', 'nkp46+|nk': 'NKp46+',
         'nk_fcrl3+': 'FcRL3+', 'nk_fcrl5+': 'FcRL5+', 'nk_fcrl6+': 'FcRL6+',
@@ -101,6 +102,7 @@ data_cd56_box = data_cd56.loc[
         'cd57+|cd56', 'pd1+|cd56'
     ]
 ]
+
 # mapper for renaming the columns
 mapper = {feat: feat[:-5].upper() for feat in data_cd56_box.columns}
 mapper.update(
@@ -112,6 +114,8 @@ mapper.update(
     }
 )
 data_cd56_box.rename(columns=mapper, inplace=True)
+
+data_cd56_box.insert(0, 'CD16+', data_cd56['cd16hi|cd56'] + data_cd56['cd16int|cd56'])
 
 # PCA
 data_adcc = pd.merge(data_adcc, allotype, on='donor', how='left')
@@ -161,7 +165,7 @@ pca_data = pd.merge(
 
 #%%
 ### FIGURE ###
-fig = plt.figure(figsize = (14.5,5))
+fig = plt.figure(figsize = (15,5))
 
 ### SUBPLOT NKs
 
@@ -169,7 +173,8 @@ plt.subplot(131)
 sns.stripplot(
     data=data_markers_nk,
     size=5,
-    alpha=.7,
+    alpha=.8,
+    palette=sns.color_palette('hls', 18),
 ) # seaborn consideres data are in the wide format here
 
 sns.boxplot(
@@ -177,10 +182,10 @@ sns.boxplot(
     color='white',
     fliersize=0, # there is a stripplot anyway
     showfliers=False,
-    boxprops={'facecolor':'none', 'edgecolor':'dimgrey'},
-    medianprops={'color':'dimgrey'},
-    whiskerprops={'color':'dimgrey'},
-    capprops={'color':'dimgrey'},
+    boxprops={'facecolor':'none', 'edgecolor':'grey'},
+    medianprops={'color':'grey'},
+    whiskerprops={'color':'grey'},
+    capprops={'color':'grey'},
 )
 
 plt.ylabel(
@@ -199,7 +204,8 @@ plt.subplot(132)
 sns.stripplot(
     data=data_cd56_box,
     size=5,
-    alpha=.7,
+    alpha=.8,
+    palette=sns.color_palette('hls', 18),
 ) # seaborn consideres data are in the wide format
 
 sns.boxplot(
@@ -207,10 +213,10 @@ sns.boxplot(
     color='white',
     fliersize=0, # there is a stripplot anyway
     showfliers=False,
-    boxprops={'facecolor':'none', 'edgecolor':'dimgrey'},
-    medianprops={'color':'dimgrey'},
-    whiskerprops={'color':'dimgrey'},
-    capprops={'color':'dimgrey'},
+    boxprops={'facecolor':'none', 'edgecolor':'grey'},
+    medianprops={'color':'grey'},
+    whiskerprops={'color':'grey'},
+    capprops={'color':'grey'},
 )
 
 plt.ylabel(

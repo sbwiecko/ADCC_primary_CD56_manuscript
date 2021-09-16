@@ -293,14 +293,21 @@ plt.legend(
 
 ## subplot C
 ax3 = plt.subplot(133)
-boxen = sns.boxplot(
+boxen = sns.boxenplot(
     x='E:T',
     y='top',
     data=data_tx,
     hue='FCGR3A',
     ax=ax3,
+    k_depth=4,
     showfliers=False, # new seaborn option since v0.10.1
-) 
+)
+
+for line in boxen.lines:
+    line.set_linewidth(3) # increase the width of the median line
+    line.set_color('white')
+    line.set_alpha(1)
+
 plt.title("ADCC effector functions of whole PBMCs", fontweight="bold")
 sns.stripplot(
     x='E:T',
@@ -309,7 +316,7 @@ sns.stripplot(
     hue='FCGR3A',
     color='black',
     size=7,
-    alpha=.6,
+    alpha=.8,
     dodge=True,
     ax=ax3,
 )

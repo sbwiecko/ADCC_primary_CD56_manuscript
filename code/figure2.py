@@ -287,7 +287,7 @@ ax1.set_ylim((-3.5, -1))
 plt.xticks(size=8)
 plt.yticks(size=8)
 
-plt.title("Correlation analysis", fontsize=12, fontweight="bold")
+plt.title("Correlation analysis (PBMCs)", fontsize=12, fontweight="bold")
 
 
 
@@ -313,15 +313,15 @@ sns.regplot(
 ax2.legend(fontsize=7, frameon=False, loc='lower right')
 ax2.set_xlabel(
     r'%CD56$^+$ of PBMCs',
-    fontdict={'size': 7, 'weight': 'bold'},
+    fontdict={'size': 9, 'weight': 'bold'},
 )
 ax2.set_ylabel(
     r'max % ADCC',
-    fontdict={'size': 7, 'weight': 'bold'},
+    fontdict={'size': 9, 'weight': 'bold'},
 )
 ax2.set_ylim((0,120))
-plt.xticks(size=6)
-plt.yticks(size=6)
+plt.xticks(size=8)
+plt.yticks(size=8)
 
 
 ### FIGS7
@@ -329,63 +329,73 @@ ax3 = fig.add_subplot(gs[:, 1:3])
 
 # we loop over the 4 different E:T ratio and plot the corresponding histogram
 for ratio in data_pbmc['E:T'].unique():
-        sns.kdeplot(
-                data_pbmc[data_pbmc['E:T'] == ratio]['EC50'],
-                shade=False,
-                color=colors_hist[ratio],
-                linewidth=4,
-                legend=False,
-        )
-        
-        sns.rugplot(
-                data_pbmc[data_pbmc['E:T'] == ratio]['EC50'],
-                color=colors_hist[ratio]
-        )
+    sns.kdeplot(
+        data_pbmc[data_pbmc['E:T'] == ratio]['EC50'],
+        shade=False,
+        color=colors_hist[ratio],
+        linewidth=2,
+        legend=False,
+    )
+    
+    sns.rugplot(
+        data_pbmc[data_pbmc['E:T'] == ratio]['EC50'],
+        color=colors_hist[ratio]
+    )
+sns.kdeplot(
+    data_cd56['EC50'],
+    shade=True,
+    bw_adjust=2.5,
+    color='gray',
+    linewidth=4,
+    legend=False,
+)
+
+sns.rugplot(
+    data_cd56['EC50'],
+    color='grey',
+    height=0.04,
+)
 
 plt.ylabel(
-        "density",
-         fontdict={'size': 10, 'weight': 'bold'})
-plt.yticks(size=11)
-plt.xlabel(r"log$_{10}$EC$_{50}$ (µg/mL)",
-           fontdict={'size': 10, 'weight': 'bold'})
-plt.axvline(
-        x=data_cd56['EC50'].mean(),
-        ls='--',
-        linewidth=4,
-        color='red',
+    '',
+    fontdict={'size': 10, 'weight': 'bold'})
+ax3.set_yticks([])
+plt.xlabel(
+    r"log$_{10}$EC$_{50}$ (µg/mL)",
+    fontdict={'size': 10, 'weight': 'bold'})
+
+plt.annotate(
+    text='isolated CD56+ cells (E:T=5:1)',
+    xy=(-2.8, .8),
+    xytext=(-2.6, .87),
+    fontsize=10,
+    fontweight='bold',
+    color='gray',
+    arrowprops={'arrowstyle': '-|>'},
 )
-plt.text(
-        x=-2.9,
-        y=.78,
-        s='mean value in isolated CD56+ cells',
-        fontdict={
-                'size':9,
-                'color':'red'
-        },
-)
-plt.ylim((0, 0.82))
+plt.ylim((0,.9))
 plt.xlim((-4.5, 0))
 plt.xticks(size=11)
 plt.title(
-        r'Improved ADCC avidity in isolated CD56$^+$ cells',
-        fontdict=dict(size=12, weight='bold')
+    r'Improved ADCC avidity in isolated CD56$^+$ cells',
+    fontdict=dict(size=12, weight='bold')
 )
 
 
 # remake the legend to include the results of the paired t-tests
 leg = [
-        '30:1 (**)',
-       '15:1 (***)',
-       '6:1 (***)',
-       '3:1 (****)'
-        ]
+    '30:1  (**)',
+    '15:1 (***)',
+    '6:1  (***)',
+    '3:1 (****)'
+]
 
 plt.legend(
-        leg,
-        loc='upper left',
-        fontsize=9,
-        title='PBMCs (E:T)',
-        title_fontsize=10,
+    leg,
+    loc='center right',
+    fontsize=9,
+    title='PBMCs (E:T)',
+    title_fontsize=10,
 )
 
 
@@ -427,7 +437,7 @@ plt.xlabel(
     'FCGR3A haplotype',
     fontdict={'size': 10, 'weight': 'bold'},
 )
-plt.xticks(rotation=0, size=9)
+plt.xticks(rotation=0, size=10)
 
 plt.title("Upper asymptote", fontweight="bold")
 
@@ -474,7 +484,7 @@ plt.xlabel(
     'FCGR3A haplotype',
     fontdict={'size': 10, 'weight': 'bold'},
 )
-plt.xticks(rotation=0, size=9)
+plt.xticks(rotation=0, size=10)
 
 # adding the stars
 stars(ax5, 0, 1, -2.20, t=-.02, pval=ANOVA_ec50_posthoc.query("A == 'F/F' & B == 'F/V'")['p-tukey'].values[0])
